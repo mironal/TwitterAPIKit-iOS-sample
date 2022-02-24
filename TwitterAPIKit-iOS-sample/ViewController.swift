@@ -26,27 +26,31 @@ class ViewController: UIViewController {
         )
     ) {
         didSet {
-            updateSignInButtonEnabled()
+            updateButtonEnabled()
         }
     }
 
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var signOutButton: UIButton!
+    @IBOutlet weak var callButton: UIButton!
+
+    @IBOutlet weak var resultText: UITextView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        updateSignInButtonEnabled()
+        updateButtonEnabled()
     }
 
-    private func updateSignInButtonEnabled() {
-        print(client.apiAuth)
+    private func updateButtonEnabled() {
         switch client.apiAuth {
         case .oauth(consumerKey: _, consumerSecret: _, oauthToken: .some, oauthTokenSecret: .some):
             signInButton.isEnabled = false
         default:
             signInButton.isEnabled = true
         }
+
+        callButton.isEnabled = !signInButton.isHeld
         signOutButton.isEnabled = !signInButton.isEnabled
     }
 
@@ -127,6 +131,30 @@ class ViewController: UIViewController {
                 oauthTokenSecret: nil
             )
         )
+    }
+
+    @IBAction func tapCall(_ sender: Any) {
+
+        if resultText.text == nil {
+            resultText.text = ""
+        }
+
+        client
+            // .v1
+            // .getHomeTimeline(.init())
+            // .postUpdateStatus(.init(status: "Hellooooo"))
+            .v2
+            .tweet.postTweet(.init(text: "blah-blah-blah"))
+            .responseObject { [weak self] response in
+                guard let self = self else { return }
+                print(response.prettyString)
+
+                var string = "---- \(Date().description) ----\n"
+                string += response.prettyString
+                string += "\n"
+                string += self.resultText.text
+                self.resultText.text = string
+            }
     }
 }
 
