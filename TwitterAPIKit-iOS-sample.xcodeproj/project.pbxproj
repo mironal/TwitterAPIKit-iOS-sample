@@ -16,6 +16,7 @@
 		5CBC257027C6831600A93CB3 /* TwitterAPIKit_iOS_sampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC256F27C6831600A93CB3 /* TwitterAPIKit_iOS_sampleTests.swift */; };
 		5CBC257A27C6831600A93CB3 /* TwitterAPIKit_iOS_sampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC257927C6831600A93CB3 /* TwitterAPIKit_iOS_sampleUITests.swift */; };
 		5CBC257C27C6831600A93CB3 /* TwitterAPIKit_iOS_sampleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC257B27C6831600A93CB3 /* TwitterAPIKit_iOS_sampleUITestsLaunchTests.swift */; };
+		5CBC258A27C683BE00A93CB3 /* TwitterAPIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5CBC258927C683BE00A93CB3 /* TwitterAPIKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CBC258A27C683BE00A93CB3 /* TwitterAPIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +145,9 @@
 			dependencies = (
 			);
 			name = "TwitterAPIKit-iOS-sample";
+			packageProductDependencies = (
+				5CBC258927C683BE00A93CB3 /* TwitterAPIKit */,
+			);
 			productName = "TwitterAPIKit-iOS-sample";
 			productReference = 5CBC255527C6831500A93CB3 /* TwitterAPIKit-iOS-sample.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +220,9 @@
 				Base,
 			);
 			mainGroup = 5CBC254C27C6831500A93CB3;
+			packageReferences = (
+				5CBC258827C683BE00A93CB3 /* XCRemoteSwiftPackageReference "TwitterAPIKit" */,
+			);
 			productRefGroup = 5CBC255627C6831500A93CB3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -604,6 +612,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5CBC258827C683BE00A93CB3 /* XCRemoteSwiftPackageReference "TwitterAPIKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mironal/TwitterAPIKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "0.0.1-beta.7";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5CBC258927C683BE00A93CB3 /* TwitterAPIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5CBC258827C683BE00A93CB3 /* XCRemoteSwiftPackageReference "TwitterAPIKit" */;
+			productName = TwitterAPIKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5CBC254D27C6831500A93CB3 /* Project object */;
 }
