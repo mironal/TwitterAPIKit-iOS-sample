@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/mironal/TwitterAPIKit",
         "state": {
           "branch": null,
-          "revision": "ed6e123ced4ff81620103bd6c255a85356129e64",
-          "version": "0.0.1-beta.7"
+          "revision": "41c470d71d4e1e2fe4675ef3516bdfad732a23bc",
+          "version": "0.0.6"
         }
       }
     ]
