@@ -60,12 +60,12 @@ class ViewController: UIViewController {
         // 2. GET oauth/authorize (makeOAuthAuthorizeURL & ASWebAuthenticationSession & parse callback url)
         // 3. POST oauth/access_token (postOAuthAccessToken)
 
-        client.v1.auth.postOAuthRequestToken(.init(oauthCallback: "twitter-api-kit-ios-sample://"))
+        client.auth.oauth11a.postOAuthRequestToken(.init(oauthCallback: "twitter-api-kit-ios-sample://"))
             .responseObject { [weak self] response in
                 guard let self = self else { return }
                 do {
                     let success = try response.result.get()
-                    let url = self.client.v1.auth.makeOAuthAuthorizeURL(.init(oauthToken: success.oauthToken))!
+                    let url = self.client.auth.oauth11a.makeOAuthAuthorizeURL(.init(oauthToken: success.oauthToken))!
 
                     let session = ASWebAuthenticationSession(url: url, callbackURLScheme: "twitter-api-kit-ios-sample") { url, error in
 
@@ -85,7 +85,7 @@ class ViewController: UIViewController {
                                   print("Invalid URL")
                                   return
                               }
-                        self.client.v1.auth.postOAuthAccessToken(.init(oauthToken: oauthToken, oauthVerifier: oauthVerifier))
+                        self.client.auth.oauth11a.postOAuthAccessToken(.init(oauthToken: oauthToken, oauthVerifier: oauthVerifier))
                             .responseObject { response in
 
                                 guard let success = response.success else {
