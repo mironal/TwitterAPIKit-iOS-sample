@@ -619,7 +619,7 @@
 			repositoryURL = "https://github.com/mironal/TwitterAPIKit";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.13;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
