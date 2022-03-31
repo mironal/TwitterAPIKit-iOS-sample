@@ -16,33 +16,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="abn-4r-qRV">
-                                <rect key="frame" x="133.5" y="44" width="147" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Sign in with Twitter"/>
-                                <connections>
-                                    <action selector="tapSignIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nSA-R5-6YR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8X-qq-KEO">
-                                <rect key="frame" x="168" y="99" width="78" height="31"/>
-                                <color key="tintColor" systemColor="systemPinkColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Sign out"/>
-                                <connections>
-                                    <action selector="tapSignOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kO3-FB-K09"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cf-OC-qV2">
-                                <rect key="frame" x="154" y="172" width="106" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Call function"/>
-                                <connections>
-                                    <action selector="tapCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HNE-jq-IXv"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="mGx-aw-SS6">
+                                <rect key="frame" x="0.0" y="44" width="414" height="176.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AYj-s3-KFn">
+                                        <rect key="frame" x="186.5" y="0.0" width="41.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="abn-4r-qRV">
+                                        <rect key="frame" x="95" y="28.5" width="224.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Sign in with Twitter (OAuth1.1a)"/>
+                                        <connections>
+                                            <action selector="tapSignIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nSA-R5-6YR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bfp-Hg-BHI">
+                                        <rect key="frame" x="96.5" y="67.5" width="221.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Sign in with Twitter (OAuth2.0)"/>
+                                        <connections>
+                                            <action selector="tapSignInOAuth2:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8ao-38-b5y"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8X-qq-KEO">
+                                        <rect key="frame" x="168.5" y="106.5" width="77.5" height="31"/>
+                                        <color key="tintColor" systemColor="systemPinkColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Sign out"/>
+                                        <connections>
+                                            <action selector="tapSignOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kO3-FB-K09"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cf-OC-qV2">
+                                        <rect key="frame" x="154.5" y="145.5" width="105.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Call function"/>
+                                        <connections>
+                                            <action selector="tapCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HNE-jq-IXv"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Blt-kb-uVa">
-                                <rect key="frame" x="0.0" y="215" width="414" height="647"/>
+                                <rect key="frame" x="0.0" y="236.5" width="414" height="625.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -52,22 +71,21 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
-                            <constraint firstItem="4cf-OC-qV2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="60c-da-Bsl"/>
-                            <constraint firstItem="abn-4r-qRV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8Dy-zY-P8A"/>
-                            <constraint firstItem="abn-4r-qRV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Asu-db-j6l"/>
-                            <constraint firstItem="n8X-qq-KEO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DNr-4S-s22"/>
-                            <constraint firstItem="Blt-kb-uVa" firstAttribute="top" secondItem="4cf-OC-qV2" secondAttribute="bottom" constant="12" id="EOl-gd-uSd"/>
+                            <constraint firstItem="Blt-kb-uVa" firstAttribute="top" secondItem="mGx-aw-SS6" secondAttribute="bottom" constant="16" id="FjZ-xp-Vg8"/>
+                            <constraint firstItem="mGx-aw-SS6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="S4K-DB-HnJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Blt-kb-uVa" secondAttribute="bottom" id="dxv-IJ-3w3"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Blt-kb-uVa" secondAttribute="trailing" id="fbc-yD-cr3"/>
-                            <constraint firstItem="n8X-qq-KEO" firstAttribute="top" secondItem="abn-4r-qRV" secondAttribute="bottom" constant="24" id="mRh-r3-EVg"/>
+                            <constraint firstItem="mGx-aw-SS6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hbW-lv-kcb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mGx-aw-SS6" secondAttribute="trailing" id="j65-8i-guv"/>
                             <constraint firstItem="Blt-kb-uVa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="oGQ-fP-iq3"/>
-                            <constraint firstItem="4cf-OC-qV2" firstAttribute="top" secondItem="n8X-qq-KEO" secondAttribute="bottom" constant="42" id="wxR-DT-33c"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="callButton" destination="4cf-OC-qV2" id="nBS-Ke-mSW"/>
+                        <outlet property="infoLabel" destination="AYj-s3-KFn" id="ReE-Ib-jfD"/>
                         <outlet property="resultText" destination="Blt-kb-uVa" id="slA-zh-nht"/>
                         <outlet property="signInButton" destination="abn-4r-qRV" id="wHr-yp-j5h"/>
+                        <outlet property="signInOAuth2Button" destination="Bfp-Hg-BHI" id="afV-gd-mTR"/>
                         <outlet property="signOutButton" destination="n8X-qq-KEO" id="Bp7-An-n7n"/>
                     </connections>
                 </viewController>
