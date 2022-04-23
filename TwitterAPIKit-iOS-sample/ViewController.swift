@@ -151,7 +151,7 @@ class ViewController: UIViewController {
             state: state,
             codeChallenge: "code challenge",
             codeChallengeMethod: "plain", // OR S256
-            scopes: ["tweet.read", "users.read", "offline.access"]
+            scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"]
         ))!
 
         let session = ASWebAuthenticationSession(url: authorizeURL, callbackURLScheme: "twitter-api-kit-ios-sample") { [weak self] url, error in
