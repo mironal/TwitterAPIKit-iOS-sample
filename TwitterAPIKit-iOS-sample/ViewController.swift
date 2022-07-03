@@ -20,11 +20,11 @@ let oauth2ClientID = "<Your Client ID>"
 
 class ViewController: UIViewController {
 
-    private lazy var client: TwitterAPIKit = {
+    private lazy var client: TwitterAPIClient = {
         if let accessToken = UserDefaults.standard.string(forKey: oauth2AccessTokenUserDefaultsKey) {
-            return TwitterAPIKit(.bearer(accessToken))
+            return TwitterAPIClient(.bearer(accessToken))
         } else {
-            return TwitterAPIKit(
+            return TwitterAPIClient(
                 .oauth(
                     consumerKey: consumerKey,
                     consumerSecret: consumerSecret,
@@ -144,7 +144,7 @@ class ViewController: UIViewController {
 
         let state = "<state_here>"
 
-        self.client = TwitterAPIKit(.none)
+        self.client = TwitterAPIClient(.none)
         let authorizeURL = client.auth.oauth20.makeOAuth2AuthorizeURL(.init(
             clientID: oauth2ClientID,
             redirectURI: "twitter-api-kit-ios-sample://",
@@ -206,7 +206,7 @@ class ViewController: UIViewController {
         UserDefaults.standard.removeObject(forKey: oauth2AccessTokenUserDefaultsKey)
         UserDefaults.standard.removeObject(forKey: oauth2RefreshTokenUserDefultsKey)
 
-        client = TwitterAPIKit(
+        client = TwitterAPIClient(
             .oauth(
                 consumerKey: consumerKey,
                 consumerSecret: consumerSecret,
