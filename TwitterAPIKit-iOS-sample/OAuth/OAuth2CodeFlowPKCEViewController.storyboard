@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Auth2 Code FlowPKCE View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="OAuth2CodeFlowPKCEViewController" customModule="TwitterAPIKit_iOS_sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8dn-DE-Iss">
+                                <rect key="frame" x="2" y="64" width="414" height="32"/>
+                                <segments>
+                                    <segment title="Confidential Client"/>
+                                    <segment title="Public Client"/>
+                                </segments>
+                                <connections>
+                                    <action selector="authTypeChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="8Es-xG-LiF"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ue-GN-ebm">
+                                <rect key="frame" x="133.5" y="119" width="147.5" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="prY-Qi-ZkO"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Sign In with Twitter"/>
+                                <connections>
+                                    <action selector="tapSignInButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="xIm-7V-6VF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8dn-DE-Iss" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="20" id="bA8-la-Zif"/>
+                            <constraint firstItem="8dn-DE-Iss" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="2" id="bE3-Nd-8hn"/>
+                            <constraint firstItem="9ue-GN-ebm" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="fIE-yC-SP8"/>
+                            <constraint firstItem="9ue-GN-ebm" firstAttribute="top" secondItem="8dn-DE-Iss" secondAttribute="bottom" constant="24" id="jf5-Ne-PRN"/>
+                            <constraint firstItem="8dn-DE-Iss" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" constant="2" id="qeZ-EN-BxF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="authTypeSegment" destination="8dn-DE-Iss" id="w9i-ZL-GOe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="34.782608695652179" y="79.6875"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mironal/TwitterAPIKit",
       "state" : {
-        "revision" : "89308a343bd908689d74c1f799f9932afe24d447",
-        "version" : "0.2.0"
+        "revision" : "4c6810d7c0351f9810da1563103303fec82c0e86",
+        "version" : "0.2.2"
       }
     }
   ],

@@ -1,249 +1,169 @@
-//
-//  ViewController.swift
-//  TwitterAPIKit-iOS-sample
-//
-//
-
-import AuthenticationServices
 import UIKit
 import TwitterAPIKit
 
-let oauthTokenUserDefaultsKey = "oauthTokenUserDefaultsKey"
-let oauthTokenSecretUserDefaultsKey = "oauthTokenSecretUserDefaultsKey"
-let oauth2AccessTokenUserDefaultsKey = "oauth2AccessTokenUserDefaultsKey"
-let oauth2RefreshTokenUserDefultsKey = "oauth2RefreshTokenUserDefultsKey"
-
 // !! Please rewrite here !!
-let consumerKey = "<Your Consumer Key>"
-let consumerSecret = "<Your Consumer Secret>"
-let oauth2ClientID = "<Your Client ID>"
 
-class ViewController: UIViewController {
+// When authenticating with OAuth 1.0a, rewrite consumerKey and consumerSecret.
+private let consumerKey = "<Your Consumer Key>"
+private let consumerSecret = "<Your Consumer Secret>"
 
-    private lazy var client: TwitterAPIClient = {
-        if let accessToken = UserDefaults.standard.string(forKey: oauth2AccessTokenUserDefaultsKey) {
-            return TwitterAPIClient(.bearer(accessToken))
-        } else {
-            return TwitterAPIClient(
-                .oauth(
-                    consumerKey: consumerKey,
-                    consumerSecret: consumerSecret,
-                    oauthToken: UserDefaults.standard.string(forKey: oauthTokenUserDefaultsKey),
-                    oauthTokenSecret: UserDefaults.standard.string(forKey: oauthTokenSecretUserDefaultsKey)
-                )
-            )
+// If you want to authenticate with OAuth 20 Public Client, please rewrite the clientID.
+// When authenticating with OAuth 20's Confidential Client, rewrite clientID and Client Secret.
+// For more information, please visit https://github.com/mironal/TwitterAPIKit/blob/main/HowDoIAuthenticate.md
+private let clientID = "<Your Client ID>"
+private let clientSecret = "<Your Client Secret>"
+
+final class ViewController: UITableViewController {
+
+    @IBOutlet private var authInfoCell: UITableViewCell!
+    @IBOutlet private var signInWithOAuth10aCell: UITableViewCell!
+    @IBOutlet private var signInWithOAuth20Cell: UITableViewCell!
+    @IBOutlet private var refreshConfidentialCell: UITableViewCell!
+    @IBOutlet private var refreshPublicCell: UITableViewCell!
+    @IBOutlet private var resetCell: UITableViewCell!
+    @IBOutlet private var getAccountVerifyCredentialsCell: UITableViewCell!
+    @IBOutlet private var getUsersMeCell: UITableViewCell!
+    
+    private var env: Env {
+        if let env = Env.restore() {
+            return env
         }
-    }() {
-        didSet {
-            updateAuthStateUI()
-        }
-    }
-
-    @IBOutlet weak var infoLabel: UILabel!
-    @IBOutlet weak var signInButton: UIButton!
-    @IBOutlet weak var signInOAuth2Button: UIButton!
-    @IBOutlet weak var signOutButton: UIButton!
-    @IBOutlet weak var callButton: UIButton!
-
-    @IBOutlet weak var resultText: UITextView!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        updateAuthStateUI()
-    }
-
-    private func updateAuthStateUI() {
-        switch client.apiAuth {
-        case .oauth(consumerKey: _, consumerSecret: _, oauthToken: .some, oauthTokenSecret: .some):
-            signInButton.isEnabled = false
-            signInOAuth2Button.isEnabled = false
-            infoLabel.text = "Authed by OAuth1.1a"
-        case .bearer:
-            signInButton.isEnabled = false
-            signInOAuth2Button.isEnabled = false
-            infoLabel.text = "Authed by OAuth2.0"
-        default:
-            signInButton.isEnabled = true
-            signInOAuth2Button.isEnabled = true
-            infoLabel.text = "Not authed"
-        }
-
-        callButton.isEnabled = !signInButton.isHeld
-        signOutButton.isEnabled = !signInButton.isEnabled
-    }
-
-    @IBAction func tapSignIn(_ sender: Any) {
-
-        // 1. POST oauth/request_token (postOAuthRequestToken)
-        // 2. GET oauth/authorize (makeOAuthAuthorizeURL & ASWebAuthenticationSession & parse callback url)
-        // 3. POST oauth/access_token (postOAuthAccessToken)
-
-        client.auth.oauth10a.postOAuthRequestToken(.init(oauthCallback: "twitter-api-kit-ios-sample://"))
-            .responseObject { [weak self] response in
-                guard let self = self else { return }
-                do {
-                    let success = try response.result.get()
-                    let url = self.client.auth.oauth10a.makeOAuthAuthorizeURL(.init(oauthToken: success.oauthToken))!
-
-                    let session = ASWebAuthenticationSession(url: url, callbackURLScheme: "twitter-api-kit-ios-sample") { url, error in
-
-                        // url is "twitter-api-kit-ios-sample://?oauth_token=<string>&oauth_verifier=<string>"
-
-                        guard let url = url else {
-                            if let error = error {
-                                print("Error:", error)
-                            }
-                            return
-                        }
-                        print("URL:", url)
-
-                        let component = URLComponents(url: url, resolvingAgainstBaseURL: false)
-                        guard let oauthToken = component?.queryItems?.first(where: { $0.name == "oauth_token"} )?.value,
-                              let oauthVerifier = component?.queryItems?.first(where: { $0.name == "oauth_verifier"})?.value else {
-                                  print("Invalid URL")
-                                  return
-                              }
-                        self.client.auth.oauth10a.postOAuthAccessToken(.init(oauthToken: oauthToken, oauthVerifier: oauthVerifier))
-                            .responseObject { response in
-
-                                guard let success = response.success else {
-                                    print("Error", String(describing: response.error))
-                                    return
-                                }
-
-                                let oauthToken = success.oauthToken
-                                let oauthTokenSecret = success.oauthTokenSecret
-                                UserDefaults.standard.set(oauthToken, forKey: oauthTokenUserDefaultsKey)
-                                UserDefaults.standard.set(oauthTokenSecret, forKey: oauthTokenSecretUserDefaultsKey)
-
-
-                                self.client = .init(
-                                    consumerKey: consumerKey,
-                                    consumerSecret: consumerSecret,
-                                    oauthToken: oauthToken,
-                                    oauthTokenSecret: oauthTokenSecret
-                                )
-                            }
-                    }
-                    session.presentationContextProvider = self
-                    session.prefersEphemeralWebBrowserSession = true
-
-                    session.start()
-
-                } catch let e {
-                    print("Error", e)
-                }
-            }
-    }
-
-
-    @IBAction func tapSignInOAuth2(_ sender: Any) {
-
-        // Public Client example
-
-        let state = "<state_here>"
-
-        self.client = TwitterAPIClient(.none)
-        let authorizeURL = client.auth.oauth20.makeOAuth2AuthorizeURL(.init(
-            clientID: oauth2ClientID,
-            redirectURI: "twitter-api-kit-ios-sample://",
-            state: state,
-            codeChallenge: "code challenge",
-            codeChallengeMethod: "plain", // OR S256
-            scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"]
-        ))!
-
-        let session = ASWebAuthenticationSession(url: authorizeURL, callbackURLScheme: "twitter-api-kit-ios-sample") { [weak self] url, error in
-            guard let self = self else { return }
-
-            guard let url = url else {
-                print(error!)
-                return
-            }
-            print("return url", url)
-
-            let component = URLComponents(url: url, resolvingAgainstBaseURL: false)
-
-            guard let returnedState = component?.queryItems?.first(where: {$0.name == "state"})?.value,
-                  let code = component?.queryItems?.first(where: { $0.name == "code" })?.value else {
-                      print("Invalid return url")
-                      return
-                  }
-            guard state == returnedState else {
-                print("Invalid state", state, returnedState)
-                return
-            }
-
-            self.client.auth.oauth20.postOAuth2AccessToken(.init(
-                code: code,
-                clientID: oauth2ClientID,
-                redirectURI: "twitter-api-kit-ios-sample://", codeVerifier: "code challenge"
-            )).responseObject { response in
-                do {
-                    let token = try response.result.get()
-                    UserDefaults.standard.set(token.accessToken, forKey: oauth2AccessTokenUserDefaultsKey)
-                    UserDefaults.standard.set(token.refreshToken, forKey: oauth2RefreshTokenUserDefultsKey)
-                    self.client = .init(.bearer(token.accessToken))
-                    print("Success!")
-                } catch let error {
-                    print("Error", error)
-                }
-            }
-        }
-
-        session.presentationContextProvider = self
-        session.prefersEphemeralWebBrowserSession = true
-
-        session.start()
-
-    }
-
-    @IBAction func tapSignOut(_ sender: Any) {
-
-        UserDefaults.standard.removeObject(forKey: oauthTokenUserDefaultsKey)
-        UserDefaults.standard.removeObject(forKey: oauthTokenSecretUserDefaultsKey)
-        UserDefaults.standard.removeObject(forKey: oauth2AccessTokenUserDefaultsKey)
-        UserDefaults.standard.removeObject(forKey: oauth2RefreshTokenUserDefultsKey)
-
-        client = TwitterAPIClient(
-            .oauth(
-                consumerKey: consumerKey,
-                consumerSecret: consumerSecret,
-                oauthToken: nil,
-                oauthTokenSecret: nil
-            )
+        return Env(
+            consumerKey: consumerKey,
+            consumerSecret: consumerSecret,
+            oauthToken: nil,
+            oauthTokenSecret: nil,
+            clientID: clientID,
+            clientSecret: clientSecret
         )
     }
 
-    @IBAction func tapCall(_ sender: Any) {
-
-        if resultText.text == nil {
-            resultText.text = ""
-        }
-
-        client
-            // .v1
-            // .getHomeTimeline(.init())
-            // .postUpdateStatus(.init(status: "Hellooooo"))
-            .v2
-            .tweet.postTweet(.init(text: "blah-blah-blah"))
-            .responseObject { [weak self] response in
-                guard let self = self else { return }
-                print(response.prettyString)
-
-                var string = "---- \(Date().description) ----\n"
-                string += response.prettyString
-                string += "\n"
-                string += self.resultText.text
-                self.resultText.text = string
+    var client: TwitterAPIClient! {
+        didSet {
+            if client == nil {
+                authInfoCell.textLabel?.text = "Not Auth"
+            } else if case .oauth10a = client.apiAuth {
+                authInfoCell.textLabel?.text = "Currently authenticated with OAuth 1.0a"
+            } else if case .oauth20 = client.apiAuth {
+                authInfoCell.textLabel?.text = "Currently authenticated with OAuth 2.0"
             }
+            tableView.reloadData()
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "TwitterAPIKit sample"
+
+        NotificationCenter.default.addObserver(self, selector: #selector(didRefreshOAuth20Token(_:)), name: TwitterAPIClient.didRefreshOAuth20Token, object: nil)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        client = createClient()
+    }
+
+    @objc func didRefreshOAuth20Token(_ notification: Notification) {
+
+        guard let token = notification.userInfo?[TwitterAPIClient.tokenUserInfoKey] as? TwitterAuthenticationMethod.OAuth20 else {
+            fatalError()
+        }
+        print("didRefreshOAuth20Token", didRefreshOAuth20Token, token)
+    }
+
+    // MARK: - Private
+
+    private func createClient() -> TwitterAPIClient? {
+        if let consumerKey = env.consumerKey,
+           let consumerSecret = env.consumerSecret,
+           let oauthToken = env.oauthToken,
+           let oauthTokenSecret = env.oauthTokenSecret {
+            return TwitterAPIClient(.oauth10a(.init(
+                consumerKey: consumerKey,
+                consumerSecret: consumerSecret,
+                oauthToken: oauthToken,
+                oauthTokenSecret: oauthTokenSecret
+            )))
+        } else if let accessToken = env.token {
+            return TwitterAPIClient(.oauth20(accessToken))
+        }
+        return nil
+    }
+
+    private func showRequestResult(text: String) {
+        let vc = RequestResultViewController.instantiateInitialViewController(text)
+        let nav = UINavigationController(rootViewController: vc)
+        self.present(nav, animated: true)
+    }
+
+    private func confirmReset() {
+        let alert = UIAlertController(title: nil, message: "Reset", preferredStyle: .alert)
+        alert.addAction(.init(title: "Reset", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            Env.reset()
+            self.client = self.createClient()
+        })
+        alert.addAction(.init(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func refreshAndStoreToken(clientType: TwitterAuthenticationMethod.OAuth20WithPKCEClientType) async {
+
+        guard let client = client, case .oauth20 = client.apiAuth else {
+            showAlert(title: "Error", message: "Refresh is available only when you are authenticating with OAuth 2.0.")
+            return
+        }
+        do {
+            let refresh = try await client.refreshOAuth20Token(type: .confidentialClient(clientID: env.clientID!, clientSecret: env.clientSecret!), forceRefresh: true)
+            if refresh.refreshed {
+                var env = self.env
+                env.token = refresh.token
+                env.store()
+                self.client = createClient()
+            }
+            showAlert(title: nil, message: "Success Refresh")
+        } catch {
+            showAlert(title: "Error", message: error.localizedDescription)
+        }
     }
 }
 
-extension ViewController: ASWebAuthenticationPresentationContextProviding {
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return view.window!
+extension ViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let cell = tableView.cellForRow(at: indexPath)
+        switch cell {
+        case signInWithOAuth10aCell:
+            let vc = OAuth1ThreeLeggedOAuthFlowViewController.instantiateInitialViewController(env)
+            navigationController?.pushViewController(vc, animated: true)
+        case signInWithOAuth20Cell:
+            let vc = OAuth2CodeFlowPKCEViewController.instantiateInitialViewController(env)
+            navigationController?.pushViewController(vc, animated: true)
+        case refreshConfidentialCell:
+            Task {
+                await refreshAndStoreToken(clientType: .confidentialClient(clientID: env.clientID!, clientSecret: env.clientSecret!))
+            }
+        case refreshPublicCell:
+            Task {
+                await refreshAndStoreToken(clientType: .publicClient)
+            }
+        case resetCell:
+            confirmReset()
+        case getAccountVerifyCredentialsCell:
+            Task {
+                let response = await client.v1.account.getAccountVerify(.init()).responseData
+                print(response.prettyString)
+                showRequestResult(text: response.prettyString)
+            }
+        case getUsersMeCell:
+            Task {
+                let response = await client.v2.user.getMe(.init()).responseData
+                print(response.prettyString)
+                showRequestResult(text: response.prettyString)
+            }
+        default:
+            break
+        }
     }
 }
-
